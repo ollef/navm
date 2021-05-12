@@ -163,11 +163,11 @@ impl<I, T> Labels<I, T> {
         G: Fn(&T) -> GraphOC<J, U>,
     {
         let mut result = Labels::new();
-        self.map.iter().map(|(label, block)| {
+        for (label, block) in self.map.iter() {
             let graph = block.and_then(f, g);
             result.map.insert(*label, graph.entry);
             result.map.extend(graph.labels.map);
-        });
+        }
         result
     }
 }
