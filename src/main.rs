@@ -4,7 +4,12 @@ use std::iter::FromIterator;
 
 mod cfg;
 
-#[derive(Debug, PartialEq, Eq, Clone, Copy)]
+#[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
+struct Label {
+    unique: i32,
+}
+
+#[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
 struct Local {
     unique: i32,
 }
@@ -28,12 +33,12 @@ enum Instruction {
 
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
 enum Terminator {
-    Jump(cfg::Label),
-    Conditional(Operand, cfg::Label, cfg::Label),
+    Jump(Label),
+    Conditional(Operand, Label, Label),
 }
 
-impl cfg::Terminate for Terminator {
-    fn successors(&self) -> std::collections::HashSet<cfg::Label> {
+impl cfg::Terminate<Label> for Terminator {
+    fn successors(&self) -> std::collections::HashSet<Label> {
         match self {
             Terminator::Jump(label) => HashSet::from_iter(IntoIter::new([*label])),
             Terminator::Conditional(_, label1, label2) => {
