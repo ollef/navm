@@ -257,6 +257,20 @@ impl<Label, Initiator, Instruction, Terminator> From<Terminator>
     }
 }
 
+impl<Label, Initiator, Instruction, Terminator> From<(Label, Initiator)>
+    for GraphCO<Label, Initiator, Instruction, Terminator>
+{
+    fn from(
+        (label, initiator): (Label, Initiator),
+    ) -> GraphCO<Label, Initiator, Instruction, Terminator> {
+        GraphCO {
+            labels: Labels::new(),
+            exit_label: label,
+            exit: BlockCO::from(initiator),
+        }
+    }
+}
+
 impl<Label, Initiator, Instruction, Terminator>
     Add<GraphOO<Label, Initiator, Instruction, Terminator>>
     for GraphOO<Label, Initiator, Instruction, Terminator>
