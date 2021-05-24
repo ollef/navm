@@ -4,6 +4,7 @@ use std::iter::FromIterator;
 
 mod block_arguments;
 mod graph;
+mod phis;
 
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
 struct Label {
