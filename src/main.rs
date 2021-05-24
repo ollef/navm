@@ -2,7 +2,7 @@ use std::array::IntoIter;
 use std::collections::HashSet;
 use std::iter::FromIterator;
 
-mod cfg;
+mod graph;
 
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
 struct Label {
@@ -37,7 +37,7 @@ enum Terminator {
     Conditional(Operand, Label, Label),
 }
 
-impl cfg::Terminate<Label> for Terminator {
+impl graph::Terminate<Label> for Terminator {
     fn successors(&self) -> std::collections::HashSet<Label> {
         match self {
             Terminator::Jump(label) => HashSet::from_iter(IntoIter::new([*label])),
