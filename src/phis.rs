@@ -2,7 +2,7 @@ use crate::graph;
 
 pub struct Phi<Label, Register> {
     destination: Register,
-    incomingValues: Vec<(Label, Register)>,
+    incoming_values: Vec<(Label, Register)>,
 }
 pub type Initiator<Label, Register> = Vec<Phi<Label, Register>>;
 
