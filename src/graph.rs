@@ -52,7 +52,7 @@ impl<Initiator, Instruction> From<Initiator> for BlockCO<Initiator, Instruction>
 
 impl<Instruction> Add<Instruction> for BlockOO<Instruction> {
     type Output = BlockOO<Instruction>;
-    fn add(mut self, instruction: Instruction) -> BlockOO<Instruction> {
+    fn add(mut self, instruction: Instruction) -> Self::Output {
         self.instructions.push(instruction);
         self
     }
@@ -60,7 +60,7 @@ impl<Instruction> Add<Instruction> for BlockOO<Instruction> {
 
 impl<Initiator, Instruction> Add<Instruction> for BlockCO<Initiator, Instruction> {
     type Output = BlockCO<Initiator, Instruction>;
-    fn add(mut self, instruction: Instruction) -> BlockCO<Initiator, Instruction> {
+    fn add(mut self, instruction: Instruction) -> Self::Output {
         self.instructions.push(instruction);
         self
     }
@@ -68,7 +68,7 @@ impl<Initiator, Instruction> Add<Instruction> for BlockCO<Initiator, Instruction
 
 impl<Instruction> Add<BlockOO<Instruction>> for BlockOO<Instruction> {
     type Output = BlockOO<Instruction>;
-    fn add(mut self, mut rhs: BlockOO<Instruction>) -> BlockOO<Instruction> {
+    fn add(mut self, mut rhs: BlockOO<Instruction>) -> Self::Output {
         self.instructions.append(&mut rhs.instructions);
         self
     }
@@ -76,10 +76,7 @@ impl<Instruction> Add<BlockOO<Instruction>> for BlockOO<Instruction> {
 
 impl<Instruction, Terminator> Add<BlockOC<Instruction, Terminator>> for BlockOO<Instruction> {
     type Output = BlockOC<Instruction, Terminator>;
-    fn add(
-        mut self,
-        mut rhs: BlockOC<Instruction, Terminator>,
-    ) -> BlockOC<Instruction, Terminator> {
+    fn add(mut self, mut rhs: BlockOC<Instruction, Terminator>) -> Self::Output {
         self.instructions.append(&mut rhs.instructions);
         BlockOC {
             instructions: self.instructions,
@@ -92,10 +89,7 @@ impl<Initiator, Instruction, Terminator> Add<BlockOC<Instruction, Terminator>>
     for BlockCO<Initiator, Instruction>
 {
     type Output = BlockCC<Initiator, Instruction, Terminator>;
-    fn add(
-        mut self,
-        mut rhs: BlockOC<Instruction, Terminator>,
-    ) -> BlockCC<Initiator, Instruction, Terminator> {
+    fn add(mut self, mut rhs: BlockOC<Instruction, Terminator>) -> Self::Output {
         self.instructions.append(&mut rhs.instructions);
         BlockCC {
             initiator: self.initiator,
@@ -107,7 +101,7 @@ impl<Initiator, Instruction, Terminator> Add<BlockOC<Instruction, Terminator>>
 
 impl<Initiator, Instruction> Add<BlockOO<Instruction>> for BlockCO<Initiator, Instruction> {
     type Output = BlockCO<Initiator, Instruction>;
-    fn add(mut self, mut rhs: BlockOO<Instruction>) -> BlockCO<Initiator, Instruction> {
+    fn add(mut self, mut rhs: BlockOO<Instruction>) -> Self::Output {
         self.instructions.append(&mut rhs.instructions);
         self
     }
@@ -278,10 +272,7 @@ where
     Label: Eq + Hash + Copy,
 {
     type Output = GraphOO<Label, Initiator, Instruction, Terminator>;
-    fn add(
-        self,
-        other: GraphOO<Label, Initiator, Instruction, Terminator>,
-    ) -> GraphOO<Label, Initiator, Instruction, Terminator> {
+    fn add(self, other: GraphOO<Label, Initiator, Instruction, Terminator>) -> Self::Output {
         match (self, other) {
             (GraphOO::Single(block), other) => block + other,
             (self_, GraphOO::Single(block)) => self_ + block,
@@ -319,10 +310,7 @@ where
     Label: Eq + Hash + Copy,
 {
     type Output = GraphOC<Label, Initiator, Instruction, Terminator>;
-    fn add(
-        self,
-        other: GraphOC<Label, Initiator, Instruction, Terminator>,
-    ) -> GraphOC<Label, Initiator, Instruction, Terminator> {
+    fn add(self, other: GraphOC<Label, Initiator, Instruction, Terminator>) -> Self::Output {
         match self {
             GraphOO::Single(block) => block + other,
             GraphOO::Many {
@@ -346,10 +334,7 @@ where
     Label: Eq + Hash + Copy,
 {
     type Output = GraphCO<Label, Initiator, Instruction, Terminator>;
-    fn add(
-        mut self,
-        other: GraphOO<Label, Initiator, Instruction, Terminator>,
-    ) -> GraphCO<Label, Initiator, Instruction, Terminator> {
+    fn add(mut self, other: GraphOO<Label, Initiator, Instruction, Terminator>) -> Self::Output {
         match other {
             GraphOO::Single(block) => self + block,
             GraphOO::Many {
@@ -377,10 +362,7 @@ where
     Label: Eq + Hash + Copy,
 {
     type Output = GraphCC<Label, Initiator, Instruction, Terminator>;
-    fn add(
-        mut self,
-        other: GraphOC<Label, Initiator, Instruction, Terminator>,
-    ) -> GraphCC<Label, Initiator, Instruction, Terminator> {
+    fn add(mut self, other: GraphOC<Label, Initiator, Instruction, Terminator>) -> Self::Output {
         self.labels.map.extend(other.labels.map);
         self.labels
             .map
@@ -395,10 +377,7 @@ impl<Label, Initiator, Instruction, Terminator> Add<BlockOO<Instruction>>
     for GraphCO<Label, Initiator, Instruction, Terminator>
 {
     type Output = GraphCO<Label, Initiator, Instruction, Terminator>;
-    fn add(
-        self,
-        other: BlockOO<Instruction>,
-    ) -> GraphCO<Label, Initiator, Instruction, Terminator> {
+    fn add(self, other: BlockOO<Instruction>) -> Self::Output {
         GraphCO {
             labels: self.labels,
             exit_label: self.exit_label,
@@ -411,10 +390,7 @@ impl<Label, Initiator, Instruction, Terminator> Add<BlockOO<Instruction>>
     for GraphOO<Label, Initiator, Instruction, Terminator>
 {
     type Output = GraphOO<Label, Initiator, Instruction, Terminator>;
-    fn add(
-        self,
-        other: BlockOO<Instruction>,
-    ) -> GraphOO<Label, Initiator, Instruction, Terminator> {
+    fn add(self, other: BlockOO<Instruction>) -> Self::Output {
         match self {
             GraphOO::Single(block) => GraphOO::Single(block + other),
             GraphOO::Many {
@@ -436,10 +412,7 @@ impl<Label, Initiator, Instruction, Terminator>
     Add<GraphOO<Label, Initiator, Instruction, Terminator>> for BlockOO<Instruction>
 {
     type Output = GraphOO<Label, Initiator, Instruction, Terminator>;
-    fn add(
-        self,
-        other: GraphOO<Label, Initiator, Instruction, Terminator>,
-    ) -> GraphOO<Label, Initiator, Instruction, Terminator> {
+    fn add(self, other: GraphOO<Label, Initiator, Instruction, Terminator>) -> Self::Output {
         match other {
             GraphOO::Single(block) => GraphOO::Single(self + block),
             GraphOO::Many {
@@ -461,10 +434,7 @@ impl<Label, Initiator, Instruction, Terminator>
     Add<GraphOC<Label, Initiator, Instruction, Terminator>> for BlockOO<Instruction>
 {
     type Output = GraphOC<Label, Initiator, Instruction, Terminator>;
-    fn add(
-        self,
-        other: GraphOC<Label, Initiator, Instruction, Terminator>,
-    ) -> GraphOC<Label, Initiator, Instruction, Terminator> {
+    fn add(self, other: GraphOC<Label, Initiator, Instruction, Terminator>) -> Self::Output {
         GraphOC {
             entry: self + other.entry,
             labels: other.labels,
@@ -478,10 +448,7 @@ where
     Label: Eq + Hash + Copy,
 {
     type Output = GraphOC<Label, Initiator, Instruction, Terminator>;
-    fn add(
-        self,
-        other: BlockOC<Instruction, Terminator>,
-    ) -> GraphOC<Label, Initiator, Instruction, Terminator> {
+    fn add(self, other: BlockOC<Instruction, Terminator>) -> Self::Output {
         match self {
             GraphOO::Single(block) => GraphOC {
                 entry: block + other,
