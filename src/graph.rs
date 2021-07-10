@@ -637,7 +637,7 @@ where
         result
     }
 
-    fn forward_analysis<F, EntryTransfer, Transfer>(
+    fn analyse_forward<F, EntryTransfer, Transfer>(
         &self,
         entry_transfer: EntryTransfer,
         transfer: Transfer,
