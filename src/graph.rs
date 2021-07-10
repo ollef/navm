@@ -583,7 +583,7 @@ where
 
 pub trait Fact {
     fn bottom() -> Self;
-    fn join(old_fact: Self, new_fact: Self) -> Self;
+    fn join(self: &mut Self, fact: &Self);
 }
 
 struct Postorder<'a, Label, Initiator, Instruction, Terminator> {
