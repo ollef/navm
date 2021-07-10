@@ -641,7 +641,7 @@ where
         &self,
         entry_transfer: EntryTransfer,
         transfer: Transfer,
-    ) -> HashMap<Label, F>
+    ) -> (F, HashMap<Label, F>)
     where
         F: Fact,
         Label: Eq + Hash + Clone,
@@ -679,6 +679,6 @@ where
                 outs.insert(label, out_fact);
             }
         }
-        outs
+        (entry_out_fact, outs)
     }
 }
