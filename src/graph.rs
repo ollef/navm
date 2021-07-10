@@ -650,8 +650,8 @@ where
     {
         let mut todo = VecDeque::new();
         let mut todo_set = HashSet::new();
-        let mut ins = HashMap::<Label, F>::new();
-        let mut outs = HashMap::<Label, F>::new();
+        let mut ins = HashMap::new();
+        let mut outs = HashMap::new();
         for (label, block) in self.postorder() {
             todo.push_back((label.clone(), block));
             todo_set.insert(label.clone());
