@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 use std::collections::HashSet;
+use std::collections::VecDeque;
 use std::hash::Hash;
 use std::ops::Add;
 
@@ -634,5 +635,50 @@ where
         };
         result.todo.extend(self.entry.terminator.successors());
         result
+    }
+
+    fn forward_analysis<F, EntryTransfer, Transfer>(
+        &self,
+        entry_transfer: EntryTransfer,
+        transfer: Transfer,
+    ) -> HashMap<Label, F>
+    where
+        F: Fact,
+        Label: Eq + Hash + Clone,
+        EntryTransfer: Fn(&BlockOC<Instruction, Terminator>) -> F,
+        Transfer: Fn(&F, &BlockCC<Initiator, Instruction, Terminator>) -> Option<F>,
+    {
+        let mut todo = VecDeque::new();
+        let mut todo_set = HashSet::new();
+        let mut ins = HashMap::<Label, F>::new();
+        let mut outs = HashMap::<Label, F>::new();
+        for (label, block) in self.postorder() {
+            todo.push_back((label.clone(), block));
+            todo_set.insert(label.clone());
+        }
+        let entry_out_fact = entry_transfer(&self.entry);
+        for successor in self.entry.terminator.successors() {
+            ins.entry(successor.clone())
+                .or_insert(F::bottom())
+                .join(&entry_out_fact);
+        }
+        while let Some((label, block)) = todo.pop_back() {
+            todo_set.remove(&label);
+            let in_fact = ins.entry(label.clone()).or_insert(F::bottom());
+            if let Some(out_fact) = transfer(in_fact, block) {
+                for successor in block.terminator.successors() {
+                    ins.entry(successor.clone())
+                        .or_insert(F::bottom())
+                        .join(&out_fact);
+                    if let Some(block) = self.labels.map.get(&successor) {
+                        if todo_set.insert(successor.clone()) {
+                            todo.push_front((successor, block));
+                        }
+                    }
+                }
+                outs.insert(label, out_fact);
+            }
+        }
+        outs
     }
 }
