@@ -545,6 +545,37 @@ impl<Label, Initiator, Instruction, Terminator> GraphOO<Label, Initiator, Instru
         }
     }
 }
+impl<Label, Initiator, Instruction, Terminator> GraphCO<Label, Initiator, Instruction, Terminator> {
+    fn and_then<
+        Label2,
+        Initiator2,
+        Instruction2,
+        Terminator2,
+        BindInitiator,
+        BindInstruction,
+        BindTerminator,
+    >(
+        &self,
+        bind_initiator: &BindInitiator,
+        bind_instruction: &BindInstruction,
+        bind_terminator: &BindTerminator,
+    ) -> GraphCO<Label2, Initiator2, Instruction2, Terminator2>
+    where
+        Label2: Eq + Hash + Copy,
+        BindInitiator:
+            Fn(&Label, &Initiator) -> GraphCO<Label2, Initiator2, Instruction2, Terminator2>,
+        BindInstruction: Fn(&Instruction) -> GraphOO<Label2, Initiator2, Instruction2, Terminator2>,
+        BindTerminator: Fn(&Terminator) -> GraphOC<Label2, Initiator2, Instruction2, Terminator2>,
+    {
+        let labels = self
+            .labels
+            .and_then(bind_initiator, bind_instruction, bind_terminator);
+        let exit_graph = self
+            .exit
+            .and_then(&self.exit_label, bind_initiator, bind_instruction);
+        GraphCC { labels } + exit_graph
+    }
+}
 
 impl<Label, Initiator, Instruction, Terminator> Labels<Label, Initiator, Instruction, Terminator> {
     fn and_then<
