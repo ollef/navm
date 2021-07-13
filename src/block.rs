@@ -35,22 +35,11 @@ pub trait Terminate<Label> {
     fn successors(self: &Self) -> HashSet<Label>;
 }
 
-impl<Label, Instruction, Terminator> Terminate<Label> for BlockOC<Instruction, Terminator>
-where
-    Terminator: Terminate<Label>,
-{
-    fn successors(&self) -> HashSet<Label> {
-        self.terminator.successors()
-    }
-}
-
-impl<Label, Initiator, Instruction, Terminator> Terminate<Label>
-    for BlockCC<Initiator, Instruction, Terminator>
-where
-    Terminator: Terminate<Label>,
-{
-    fn successors(&self) -> HashSet<Label> {
-        self.terminator.successors()
+impl<Instruction> BlockOO<Instruction> {
+    pub fn new() -> BlockOO<Instruction> {
+        BlockOO {
+            instructions: Vec::new(),
+        }
     }
 }
 
@@ -80,10 +69,21 @@ impl<Initiator, Instruction> From<Initiator> for BlockCO<Initiator, Instruction>
     }
 }
 
-impl<Instruction> BlockOO<Instruction> {
-    pub fn new() -> BlockOO<Instruction> {
-        BlockOO {
-            instructions: Vec::new(),
-        }
+impl<Label, Instruction, Terminator> Terminate<Label> for BlockOC<Instruction, Terminator>
+where
+    Terminator: Terminate<Label>,
+{
+    fn successors(&self) -> HashSet<Label> {
+        self.terminator.successors()
+    }
+}
+
+impl<Label, Initiator, Instruction, Terminator> Terminate<Label>
+    for BlockCC<Initiator, Instruction, Terminator>
+where
+    Terminator: Terminate<Label>,
+{
+    fn successors(&self) -> HashSet<Label> {
+        self.terminator.successors()
     }
 }
