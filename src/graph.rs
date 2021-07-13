@@ -374,6 +374,23 @@ where
     }
 }
 
+impl<Label, Initiator, Instruction, Terminator>
+    Add<GraphCO<Label, Initiator, Instruction, Terminator>>
+    for GraphCC<Label, Initiator, Instruction, Terminator>
+where
+    Label: Eq + Hash + Copy,
+{
+    type Output = GraphCO<Label, Initiator, Instruction, Terminator>;
+    fn add(mut self, other: GraphCO<Label, Initiator, Instruction, Terminator>) -> Self::Output {
+        self.labels.map.extend(other.labels.map);
+        GraphCO {
+            labels: self.labels,
+            exit_label: other.exit_label,
+            exit: other.exit,
+        }
+    }
+}
+
 impl<Label, Initiator, Instruction, Terminator> Add<BlockOO<Instruction>>
     for GraphCO<Label, Initiator, Instruction, Terminator>
 {
