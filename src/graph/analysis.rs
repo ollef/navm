@@ -90,7 +90,7 @@ where
             todo_set.insert(label.clone());
         }
         let entry_out_fact = entry_transfer(&self.entry);
-        for successor in self.entry.terminator.successors() {
+        for successor in self.entry.successors() {
             ins.entry(successor.clone())
                 .or_insert(F::bottom())
                 .join(&entry_out_fact);
@@ -99,7 +99,7 @@ where
             todo_set.remove(&label);
             let in_fact = ins.entry(label.clone()).or_insert(F::bottom());
             if let Some(out_fact) = transfer(in_fact, block) {
-                for successor in block.terminator.successors() {
+                for successor in block.successors() {
                     ins.entry(successor.clone())
                         .or_insert(F::bottom())
                         .join(&out_fact);
