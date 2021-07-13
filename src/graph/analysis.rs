@@ -179,4 +179,59 @@ where
         }
         (entry_out_fact, outs)
     }
+
+    pub fn analyse_backward<F, EntryTransfer, Transfer>(
+        &self,
+        entry_transfer: EntryTransfer,
+        transfer: Transfer,
+    ) -> (F, HashMap<Label, F>)
+    where
+        F: Fact,
+        Label: Eq + Hash + Clone,
+        EntryTransfer: Fn(&F, &BlockOC<Instruction, Terminator>) -> Option<F>,
+        Transfer: Fn(&F, &BlockCC<Initiator, Instruction, Terminator>) -> Option<F>,
+    {
+        let mut predecessors = HashMap::new();
+        for (label, block) in &self.labels.map {
+            for successor in block.successors() {
+                predecessors
+                    .entry(successor.clone())
+                    .or_insert(HashSet::new())
+                    .insert(label.clone());
+            }
+        }
+        let mut todo = VecDeque::new();
+        let mut todo_set = HashSet::new();
+        let mut ins = HashMap::new();
+        let mut outs = HashMap::new();
+        for (label, block) in self.postorder() {
+            todo.push_front((label.clone(), block));
+            todo_set.insert(label.clone());
+        }
+        while let Some((label, block)) = todo.pop_back() {
+            todo_set.remove(&label);
+            let in_fact = ins.entry(label.clone()).or_insert(F::bottom());
+            if let Some(out_fact) = transfer(in_fact, block) {
+                for predecessor in predecessors.get(&label).iter().flat_map(|v| v.iter()) {
+                    ins.entry(predecessor.clone())
+                        .or_insert(F::bottom())
+                        .join(&out_fact);
+                    if let Some(block) = self.labels.map.get(&predecessor) {
+                        if todo_set.insert(predecessor.clone()) {
+                            todo.push_front((predecessor.clone(), block));
+                        }
+                    }
+                }
+                outs.insert(label, out_fact);
+            }
+        }
+        let mut entry_in_fact: F = Fact::bottom();
+        for successor in self.entry.successors() {
+            if let Some(fact) = ins.get(&successor) {
+                entry_in_fact.join(fact);
+            }
+        }
+        let entry_out_fact = entry_transfer(&entry_in_fact, &self.entry);
+        (entry_out_fact.unwrap_or(entry_in_fact), outs)
+    }
 }
