@@ -5,6 +5,7 @@ use std::collections::VecDeque;
 use std::hash::Hash;
 use std::ops::Add;
 
+#[derive(Clone)]
 pub struct Labels<Label, Initiator, Instruction, Terminator> {
     pub map: HashMap<Label, BlockCC<Initiator, Instruction, Terminator>>,
 }
@@ -17,6 +18,7 @@ impl<Label, Initiator, Instruction, Terminator> Labels<Label, Initiator, Instruc
     }
 }
 
+#[derive(Clone)]
 pub enum GraphOO<Label, Initiator, Instruction, Terminator> {
     Single(BlockOO<Instruction>),
     Many {
@@ -27,17 +29,20 @@ pub enum GraphOO<Label, Initiator, Instruction, Terminator> {
     },
 }
 
+#[derive(Clone)]
 pub struct GraphOC<Label, Initiator, Instruction, Terminator> {
     pub entry: BlockOC<Instruction, Terminator>,
     pub labels: Labels<Label, Initiator, Instruction, Terminator>,
 }
 
+#[derive(Clone)]
 pub struct GraphCO<Label, Initiator, Instruction, Terminator> {
     pub labels: Labels<Label, Initiator, Instruction, Terminator>,
     pub exit_label: Label,
     pub exit: BlockCO<Initiator, Instruction>,
 }
 
+#[derive(Clone)]
 pub struct GraphCC<Label, Initiator, Instruction, Terminator> {
     pub labels: Labels<Label, Initiator, Instruction, Terminator>,
 }
