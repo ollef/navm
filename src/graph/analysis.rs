@@ -66,6 +66,71 @@ where
     )
 }
 
+pub fn make_backward_transfer<
+    Initiator,
+    Instruction,
+    Terminator,
+    F,
+    InitiatorTransfer,
+    InstructionTransfer,
+    TerminatorTransfer,
+>(
+    initiator_transfer: InitiatorTransfer,
+    instruction_transfer: InstructionTransfer,
+    terminator_transfer: TerminatorTransfer,
+) -> (
+    impl Fn(&F, &BlockOC<Instruction, Terminator>) -> Option<F>,
+    impl Fn(&F, &BlockCC<Initiator, Instruction, Terminator>) -> Option<F>,
+)
+where
+    F: Fact,
+    InitiatorTransfer: Fn(&F, &Initiator) -> Option<F>,
+    InstructionTransfer: Fn(&F, &Instruction) -> Option<F> + Clone,
+    TerminatorTransfer: Fn(&F, &Terminator) -> Option<F> + Clone,
+{
+    let instruction_transfer_clone = instruction_transfer.clone();
+    let terminator_transfer_clone = terminator_transfer.clone();
+    (
+        move |in_fact, block| {
+            let mut fact = None;
+            if let Some(new_fact) =
+                terminator_transfer(fact.as_ref().unwrap_or(in_fact), &block.terminator)
+            {
+                fact = Some(new_fact);
+            }
+            for instruction in &block.instructions {
+                if let Some(new_fact) =
+                    instruction_transfer(fact.as_ref().unwrap_or(in_fact), &instruction)
+                {
+                    fact = Some(new_fact);
+                }
+            }
+            fact
+        },
+        move |in_fact, block| {
+            let mut fact = None;
+            if let Some(new_fact) =
+                terminator_transfer_clone(fact.as_ref().unwrap_or(in_fact), &block.terminator)
+            {
+                fact = Some(new_fact);
+            }
+            for instruction in &block.instructions {
+                if let Some(new_fact) =
+                    instruction_transfer_clone(fact.as_ref().unwrap_or(in_fact), &instruction)
+                {
+                    fact = Some(new_fact);
+                }
+            }
+            if let Some(new_fact) =
+                initiator_transfer(fact.as_ref().unwrap_or(in_fact), &block.initiator)
+            {
+                fact = Some(new_fact);
+            }
+            fact
+        },
+    )
+}
+
 impl<Label, Initiator, Instruction, Terminator> GraphOC<Label, Initiator, Instruction, Terminator>
 where
     Terminator: Terminate<Label>,
