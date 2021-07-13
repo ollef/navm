@@ -5,7 +5,7 @@ pub trait Fact {
     fn join(self: &mut Self, fact: &Self);
 }
 
-pub fn make_transfer<
+pub fn make_forward_transfer<
     Initiator,
     Instruction,
     Terminator,
