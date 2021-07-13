@@ -148,17 +148,27 @@ impl<Instruction, Terminator> BlockOC<Instruction, Terminator> {
 }
 
 impl<Initiator, Instruction> BlockCO<Initiator, Instruction> {
-    fn and_then<Label2, Initiator2, Instruction2, Terminator2, BindInitiator, BindInstruction>(
+    fn and_then<
+        Label,
+        Label2,
+        Initiator2,
+        Instruction2,
+        Terminator2,
+        BindInitiator,
+        BindInstruction,
+    >(
         &self,
+        label: &Label,
         bind_initiator: BindInitiator,
         bind_instruction: BindInstruction,
     ) -> GraphCO<Label2, Initiator2, Instruction2, Terminator2>
     where
         Label2: Eq + Hash + Copy,
-        BindInitiator: Fn(&Initiator) -> GraphCO<Label2, Initiator2, Instruction2, Terminator2>,
+        BindInitiator:
+            Fn(&Label, &Initiator) -> GraphCO<Label2, Initiator2, Instruction2, Terminator2>,
         BindInstruction: Fn(&Instruction) -> GraphOO<Label2, Initiator2, Instruction2, Terminator2>,
     {
-        bind_initiator(&self.initiator)
+        bind_initiator(label, &self.initiator)
             + self
                 .instructions
                 .iter()
@@ -522,10 +532,7 @@ impl<Label, Initiator, Instruction, Terminator> GraphOO<Label, Initiator, Instru
                 let entry_graph = entry.and_then(bind_instruction, bind_terminator);
                 let entry = entry_graph.entry;
                 let mut labels = labels.and_then(bind_initiator, bind_instruction, bind_terminator);
-                let exit_graph = exit.and_then(
-                    |initiator| bind_initiator(exit_label, initiator),
-                    bind_instruction,
-                );
+                let exit_graph = exit.and_then(exit_label, bind_initiator, bind_instruction);
                 labels.map.extend(entry_graph.labels.map);
                 labels.map.extend(exit_graph.labels.map);
                 GraphOO::Many {
