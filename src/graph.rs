@@ -1,5 +1,7 @@
 mod from;
 pub use crate::graph::from::*;
+mod new;
+pub use crate::graph::new::*;
 
 pub use crate::block::*;
 
@@ -12,14 +14,6 @@ use std::ops::Add;
 #[derive(Clone)]
 pub struct Labels<Label, Initiator, Instruction, Terminator> {
     pub map: HashMap<Label, BlockCC<Initiator, Instruction, Terminator>>,
-}
-
-impl<Label, Initiator, Instruction, Terminator> Labels<Label, Initiator, Instruction, Terminator> {
-    pub fn new() -> Labels<Label, Initiator, Instruction, Terminator> {
-        Labels {
-            map: HashMap::new(),
-        }
-    }
 }
 
 #[derive(Clone)]
@@ -271,10 +265,6 @@ where
 }
 
 impl<Label, Initiator, Instruction, Terminator> GraphOO<Label, Initiator, Instruction, Terminator> {
-    pub fn new() -> GraphOO<Label, Initiator, Instruction, Terminator> {
-        GraphOO::Single(BlockOO::new())
-    }
-
     pub fn and_then<
         Label2,
         Initiator2,
