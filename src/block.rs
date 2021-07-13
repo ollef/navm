@@ -1,4 +1,5 @@
 use crate::graph::*;
+use std::collections::HashSet;
 use std::hash::Hash;
 use std::ops::Add;
 
@@ -24,6 +25,29 @@ pub struct BlockCC<Initiator, Instruction, Terminator> {
     pub initiator: Initiator,
     pub instructions: Vec<Instruction>,
     pub terminator: Terminator,
+}
+
+pub trait Terminate<Label> {
+    fn successors(self: &Self) -> HashSet<Label>;
+}
+
+impl<Label, Instruction, Terminator> Terminate<Label> for BlockOC<Instruction, Terminator>
+where
+    Terminator: Terminate<Label>,
+{
+    fn successors(&self) -> HashSet<Label> {
+        self.terminator.successors()
+    }
+}
+
+impl<Label, Initiator, Instruction, Terminator> Terminate<Label>
+    for BlockCC<Initiator, Instruction, Terminator>
+where
+    Terminator: Terminate<Label>,
+{
+    fn successors(&self) -> HashSet<Label> {
+        self.terminator.successors()
+    }
 }
 
 impl<Instruction> From<Instruction> for BlockOO<Instruction> {

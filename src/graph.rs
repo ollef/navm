@@ -49,29 +49,6 @@ pub struct GraphCC<Label, Initiator, Instruction, Terminator> {
     pub labels: Labels<Label, Initiator, Instruction, Terminator>,
 }
 
-pub trait Terminate<Label> {
-    fn successors(self: &Self) -> HashSet<Label>;
-}
-
-impl<Label, Instruction, Terminator> Terminate<Label> for BlockOC<Instruction, Terminator>
-where
-    Terminator: Terminate<Label>,
-{
-    fn successors(&self) -> HashSet<Label> {
-        self.terminator.successors()
-    }
-}
-
-impl<Label, Initiator, Instruction, Terminator> Terminate<Label>
-    for BlockCC<Initiator, Instruction, Terminator>
-where
-    Terminator: Terminate<Label>,
-{
-    fn successors(&self) -> HashSet<Label> {
-        self.terminator.successors()
-    }
-}
-
 pub trait Fact {
     fn bottom() -> Self;
     fn join(self: &mut Self, fact: &Self);
