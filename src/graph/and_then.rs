@@ -133,7 +133,7 @@ impl<Label, Initiator, Instruction, Terminator> GraphCC<Label, Initiator, Instru
         BindInstruction: Fn(&Instruction) -> GraphOO<Label2, Initiator2, Instruction2, Terminator2>,
         BindTerminator: Fn(&Terminator) -> GraphOC<Label2, Initiator2, Instruction2, Terminator2>,
     {
-        let mut labels = self
+        let labels = self
             .labels
             .and_then(bind_initiator, bind_instruction, bind_terminator);
         GraphCC { labels }
