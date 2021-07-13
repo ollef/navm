@@ -2,6 +2,7 @@ use std::array::IntoIter;
 use std::collections::HashSet;
 use std::iter::FromIterator;
 
+mod block;
 mod block_arguments;
 mod graph;
 mod phis;
