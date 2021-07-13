@@ -4,7 +4,7 @@ impl<Label, Initiator, Instruction, Terminator>
     Add<GraphOO<Label, Initiator, Instruction, Terminator>>
     for GraphOO<Label, Initiator, Instruction, Terminator>
 where
-    Label: Eq + Hash + Clone,
+    Label: Eq + Hash,
 {
     type Output = GraphOO<Label, Initiator, Instruction, Terminator>;
     fn add(self, other: GraphOO<Label, Initiator, Instruction, Terminator>) -> Self::Output {
@@ -42,7 +42,7 @@ impl<Label, Initiator, Instruction, Terminator>
     Add<GraphOC<Label, Initiator, Instruction, Terminator>>
     for GraphOO<Label, Initiator, Instruction, Terminator>
 where
-    Label: Eq + Hash + Clone,
+    Label: Eq + Hash,
 {
     type Output = GraphOC<Label, Initiator, Instruction, Terminator>;
     fn add(self, other: GraphOC<Label, Initiator, Instruction, Terminator>) -> Self::Output {
@@ -66,7 +66,7 @@ impl<Label, Initiator, Instruction, Terminator>
     Add<GraphOO<Label, Initiator, Instruction, Terminator>>
     for GraphCO<Label, Initiator, Instruction, Terminator>
 where
-    Label: Eq + Hash + Clone,
+    Label: Eq + Hash,
 {
     type Output = GraphCO<Label, Initiator, Instruction, Terminator>;
     fn add(mut self, other: GraphOO<Label, Initiator, Instruction, Terminator>) -> Self::Output {
@@ -94,7 +94,7 @@ impl<Label, Initiator, Instruction, Terminator>
     Add<GraphOC<Label, Initiator, Instruction, Terminator>>
     for GraphCO<Label, Initiator, Instruction, Terminator>
 where
-    Label: Eq + Hash + Clone,
+    Label: Eq + Hash,
 {
     type Output = GraphCC<Label, Initiator, Instruction, Terminator>;
     fn add(mut self, other: GraphOC<Label, Initiator, Instruction, Terminator>) -> Self::Output {
@@ -112,7 +112,7 @@ impl<Label, Initiator, Instruction, Terminator>
     Add<GraphCO<Label, Initiator, Instruction, Terminator>>
     for GraphCC<Label, Initiator, Instruction, Terminator>
 where
-    Label: Eq + Hash + Clone,
+    Label: Eq + Hash,
 {
     type Output = GraphCO<Label, Initiator, Instruction, Terminator>;
     fn add(mut self, other: GraphCO<Label, Initiator, Instruction, Terminator>) -> Self::Output {
@@ -197,7 +197,7 @@ impl<Label, Initiator, Instruction, Terminator>
 impl<Label, Initiator, Instruction, Terminator> Add<BlockOC<Instruction, Terminator>>
     for GraphOO<Label, Initiator, Instruction, Terminator>
 where
-    Label: Eq + Hash + Clone,
+    Label: Eq + Hash,
 {
     type Output = GraphOC<Label, Initiator, Instruction, Terminator>;
     fn add(self, other: BlockOC<Instruction, Terminator>) -> Self::Output {

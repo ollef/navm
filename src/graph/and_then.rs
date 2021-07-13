@@ -16,7 +16,7 @@ impl<Label, Initiator, Instruction, Terminator> GraphOO<Label, Initiator, Instru
         bind_terminator: &BindTerminator,
     ) -> GraphOO<Label2, Initiator2, Instruction2, Terminator2>
     where
-        Label2: Eq + Hash + Clone,
+        Label2: Eq + Hash,
         BindInitiator:
             Fn(&Label, &Initiator) -> GraphCO<Label2, Initiator2, Instruction2, Terminator2>,
         BindInstruction: Fn(&Instruction) -> GraphOO<Label2, Initiator2, Instruction2, Terminator2>,
@@ -63,7 +63,7 @@ impl<Label, Initiator, Instruction, Terminator> GraphCO<Label, Initiator, Instru
         bind_terminator: &BindTerminator,
     ) -> GraphCO<Label2, Initiator2, Instruction2, Terminator2>
     where
-        Label2: Eq + Hash + Clone,
+        Label2: Eq + Hash,
         BindInitiator:
             Fn(&Label, &Initiator) -> GraphCO<Label2, Initiator2, Instruction2, Terminator2>,
         BindInstruction: Fn(&Instruction) -> GraphOO<Label2, Initiator2, Instruction2, Terminator2>,
@@ -95,7 +95,7 @@ impl<Label, Initiator, Instruction, Terminator> GraphOC<Label, Initiator, Instru
         bind_terminator: &BindTerminator,
     ) -> GraphOC<Label2, Initiator2, Instruction2, Terminator2>
     where
-        Label2: Eq + Hash + Clone,
+        Label2: Eq + Hash,
         BindInitiator:
             Fn(&Label, &Initiator) -> GraphCO<Label2, Initiator2, Instruction2, Terminator2>,
         BindInstruction: Fn(&Instruction) -> GraphOO<Label2, Initiator2, Instruction2, Terminator2>,
@@ -127,7 +127,7 @@ impl<Label, Initiator, Instruction, Terminator> GraphCC<Label, Initiator, Instru
         bind_terminator: &BindTerminator,
     ) -> GraphCC<Label2, Initiator2, Instruction2, Terminator2>
     where
-        Label2: Eq + Hash + Clone,
+        Label2: Eq + Hash,
         BindInitiator:
             Fn(&Label, &Initiator) -> GraphCO<Label2, Initiator2, Instruction2, Terminator2>,
         BindInstruction: Fn(&Instruction) -> GraphOO<Label2, Initiator2, Instruction2, Terminator2>,
@@ -156,7 +156,7 @@ impl<Label, Initiator, Instruction, Terminator> Labels<Label, Initiator, Instruc
         bind_terminator: &BindTerminator,
     ) -> Labels<Label2, Initiator2, Instruction2, Terminator2>
     where
-        Label2: Eq + Hash + Clone,
+        Label2: Eq + Hash,
         BindInitiator:
             Fn(&Label, &Initiator) -> GraphCO<Label2, Initiator2, Instruction2, Terminator2>,
         BindInstruction: Fn(&Instruction) -> GraphOO<Label2, Initiator2, Instruction2, Terminator2>,
