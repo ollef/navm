@@ -495,7 +495,6 @@ impl<Label, Initiator, Instruction, Terminator> GraphOO<Label, Initiator, Instru
         Initiator2,
         Instruction2,
         Terminator2,
-        MapLabel,
         BindInitiator,
         BindInstruction,
         BindTerminator,
@@ -507,7 +506,6 @@ impl<Label, Initiator, Instruction, Terminator> GraphOO<Label, Initiator, Instru
     ) -> GraphOO<Label2, Initiator2, Instruction2, Terminator2>
     where
         Label2: Eq + Hash + Copy,
-        MapLabel: Fn(&Label) -> Label2,
         BindInitiator:
             Fn(&Label, &Initiator) -> GraphCO<Label2, Initiator2, Instruction2, Terminator2>,
         BindInstruction: Fn(&Instruction) -> GraphOO<Label2, Initiator2, Instruction2, Terminator2>,
