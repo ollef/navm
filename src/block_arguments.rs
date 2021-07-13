@@ -1,13 +1,12 @@
-use crate::block;
 use crate::graph;
 
 pub type Initiator<Register> = Vec<Register>;
 
-pub type BlockOO<Instruction> = block::BlockOO<Instruction>;
-pub type BlockOC<Instruction, Terminator> = block::BlockOC<Instruction, Terminator>;
-pub type BlockCO<Register, Instruction> = block::BlockCO<Initiator<Register>, Instruction>;
+pub type BlockOO<Instruction> = graph::BlockOO<Instruction>;
+pub type BlockOC<Instruction, Terminator> = graph::BlockOC<Instruction, Terminator>;
+pub type BlockCO<Register, Instruction> = graph::BlockCO<Initiator<Register>, Instruction>;
 pub type BlockCC<Register, Instruction, Terminator> =
-    block::BlockCC<Initiator<Register>, Instruction, Terminator>;
+    graph::BlockCC<Initiator<Register>, Instruction, Terminator>;
 
 pub type GraphOO<Label, Register, Instruction, Terminator> =
     graph::GraphOO<Label, Initiator<Register>, Instruction, Terminator>;
