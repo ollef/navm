@@ -662,3 +662,54 @@ where
         (entry_out_fact, outs)
     }
 }
+
+struct WithReplacement<Original, Replacement> {
+    original: Original,
+    replacement: Option<Replacement>,
+}
+
+type InitiatorWithReplacement<Label, Initiator, Instruction, Terminator> =
+    WithReplacement<Initiator, GraphCO<Label, Initiator, Instruction, Terminator>>;
+
+type InstructionWithReplacement<Label, Initiator, Instruction, Terminator> =
+    WithReplacement<Instruction, GraphOO<Label, Initiator, Instruction, Terminator>>;
+
+type TerminatorWithReplacement<Label, Initiator, Instruction, Terminator> =
+    WithReplacement<Terminator, GraphOC<Label, Initiator, Instruction, Terminator>>;
+
+impl<Label, Initiator, Instruction, Terminator>
+    GraphOC<
+        Label,
+        InitiatorWithReplacement<Label, Initiator, Instruction, Terminator>,
+        InstructionWithReplacement<Label, Initiator, Instruction, Terminator>,
+        TerminatorWithReplacement<Label, Initiator, Instruction, Terminator>,
+    >
+where
+    Initiator: Clone,
+    Instruction: Clone,
+    Terminator: Clone,
+    Label: Eq + Hash + Clone,
+{
+    fn replace(&self) -> GraphOC<Label, Initiator, Instruction, Terminator> {
+        self.and_then(
+            &|label, initiator| {
+                initiator
+                    .replacement
+                    .clone()
+                    .unwrap_or_else(|| GraphCO::from((label.clone(), initiator.original.clone())))
+            },
+            &|instruction| {
+                instruction
+                    .replacement
+                    .clone()
+                    .unwrap_or_else(|| GraphOO::from(instruction.original.clone()))
+            },
+            &|terminator| {
+                terminator
+                    .replacement
+                    .clone()
+                    .unwrap_or_else(|| GraphOC::from(terminator.original.clone()))
+            },
+        )
+    }
+}
