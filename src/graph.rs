@@ -79,7 +79,7 @@ impl<Label, Initiator, Instruction, Terminator>
     Add<GraphOO<Label, Initiator, Instruction, Terminator>>
     for GraphOO<Label, Initiator, Instruction, Terminator>
 where
-    Label: Eq + Hash + Copy,
+    Label: Eq + Hash + Clone,
 {
     type Output = GraphOO<Label, Initiator, Instruction, Terminator>;
     fn add(self, other: GraphOO<Label, Initiator, Instruction, Terminator>) -> Self::Output {
@@ -117,7 +117,7 @@ impl<Label, Initiator, Instruction, Terminator>
     Add<GraphOC<Label, Initiator, Instruction, Terminator>>
     for GraphOO<Label, Initiator, Instruction, Terminator>
 where
-    Label: Eq + Hash + Copy,
+    Label: Eq + Hash + Clone,
 {
     type Output = GraphOC<Label, Initiator, Instruction, Terminator>;
     fn add(self, other: GraphOC<Label, Initiator, Instruction, Terminator>) -> Self::Output {
@@ -141,7 +141,7 @@ impl<Label, Initiator, Instruction, Terminator>
     Add<GraphOO<Label, Initiator, Instruction, Terminator>>
     for GraphCO<Label, Initiator, Instruction, Terminator>
 where
-    Label: Eq + Hash + Copy,
+    Label: Eq + Hash + Clone,
 {
     type Output = GraphCO<Label, Initiator, Instruction, Terminator>;
     fn add(mut self, other: GraphOO<Label, Initiator, Instruction, Terminator>) -> Self::Output {
@@ -169,7 +169,7 @@ impl<Label, Initiator, Instruction, Terminator>
     Add<GraphOC<Label, Initiator, Instruction, Terminator>>
     for GraphCO<Label, Initiator, Instruction, Terminator>
 where
-    Label: Eq + Hash + Copy,
+    Label: Eq + Hash + Clone,
 {
     type Output = GraphCC<Label, Initiator, Instruction, Terminator>;
     fn add(mut self, other: GraphOC<Label, Initiator, Instruction, Terminator>) -> Self::Output {
@@ -187,7 +187,7 @@ impl<Label, Initiator, Instruction, Terminator>
     Add<GraphCO<Label, Initiator, Instruction, Terminator>>
     for GraphCC<Label, Initiator, Instruction, Terminator>
 where
-    Label: Eq + Hash + Copy,
+    Label: Eq + Hash + Clone,
 {
     type Output = GraphCO<Label, Initiator, Instruction, Terminator>;
     fn add(mut self, other: GraphCO<Label, Initiator, Instruction, Terminator>) -> Self::Output {
@@ -272,7 +272,7 @@ impl<Label, Initiator, Instruction, Terminator>
 impl<Label, Initiator, Instruction, Terminator> Add<BlockOC<Instruction, Terminator>>
     for GraphOO<Label, Initiator, Instruction, Terminator>
 where
-    Label: Eq + Hash + Copy,
+    Label: Eq + Hash + Clone,
 {
     type Output = GraphOC<Label, Initiator, Instruction, Terminator>;
     fn add(self, other: BlockOC<Instruction, Terminator>) -> Self::Output {
@@ -314,7 +314,7 @@ impl<Label, Initiator, Instruction, Terminator> GraphOO<Label, Initiator, Instru
         bind_terminator: &BindTerminator,
     ) -> GraphOO<Label2, Initiator2, Instruction2, Terminator2>
     where
-        Label2: Eq + Hash + Copy,
+        Label2: Eq + Hash + Clone,
         BindInitiator:
             Fn(&Label, &Initiator) -> GraphCO<Label2, Initiator2, Instruction2, Terminator2>,
         BindInstruction: Fn(&Instruction) -> GraphOO<Label2, Initiator2, Instruction2, Terminator2>,
@@ -344,6 +344,7 @@ impl<Label, Initiator, Instruction, Terminator> GraphOO<Label, Initiator, Instru
         }
     }
 }
+
 impl<Label, Initiator, Instruction, Terminator> GraphCO<Label, Initiator, Instruction, Terminator> {
     fn and_then<
         Label2,
@@ -360,7 +361,7 @@ impl<Label, Initiator, Instruction, Terminator> GraphCO<Label, Initiator, Instru
         bind_terminator: &BindTerminator,
     ) -> GraphCO<Label2, Initiator2, Instruction2, Terminator2>
     where
-        Label2: Eq + Hash + Copy,
+        Label2: Eq + Hash + Clone,
         BindInitiator:
             Fn(&Label, &Initiator) -> GraphCO<Label2, Initiator2, Instruction2, Terminator2>,
         BindInstruction: Fn(&Instruction) -> GraphOO<Label2, Initiator2, Instruction2, Terminator2>,
@@ -392,7 +393,7 @@ impl<Label, Initiator, Instruction, Terminator> GraphOC<Label, Initiator, Instru
         bind_terminator: &BindTerminator,
     ) -> GraphOC<Label2, Initiator2, Instruction2, Terminator2>
     where
-        Label2: Eq + Hash + Copy,
+        Label2: Eq + Hash + Clone,
         BindInitiator:
             Fn(&Label, &Initiator) -> GraphCO<Label2, Initiator2, Instruction2, Terminator2>,
         BindInstruction: Fn(&Instruction) -> GraphOO<Label2, Initiator2, Instruction2, Terminator2>,
@@ -424,7 +425,7 @@ impl<Label, Initiator, Instruction, Terminator> GraphCC<Label, Initiator, Instru
         bind_terminator: &BindTerminator,
     ) -> GraphCC<Label2, Initiator2, Instruction2, Terminator2>
     where
-        Label2: Eq + Hash + Copy,
+        Label2: Eq + Hash + Clone,
         BindInitiator:
             Fn(&Label, &Initiator) -> GraphCO<Label2, Initiator2, Instruction2, Terminator2>,
         BindInstruction: Fn(&Instruction) -> GraphOO<Label2, Initiator2, Instruction2, Terminator2>,
@@ -453,7 +454,7 @@ impl<Label, Initiator, Instruction, Terminator> Labels<Label, Initiator, Instruc
         bind_terminator: &BindTerminator,
     ) -> Labels<Label2, Initiator2, Instruction2, Terminator2>
     where
-        Label2: Eq + Hash + Copy,
+        Label2: Eq + Hash + Clone,
         BindInitiator:
             Fn(&Label, &Initiator) -> GraphCO<Label2, Initiator2, Instruction2, Terminator2>,
         BindInstruction: Fn(&Instruction) -> GraphOO<Label2, Initiator2, Instruction2, Terminator2>,
