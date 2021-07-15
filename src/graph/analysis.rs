@@ -133,6 +133,7 @@ where
 
 impl<Label, Initiator, Instruction, Terminator> GraphOC<Label, Initiator, Instruction, Terminator>
 where
+    Label: Eq + Hash + Clone,
     Terminator: Terminate<Label>,
 {
     pub fn analyse_forward<F, EntryTransfer, Transfer>(
@@ -142,7 +143,6 @@ where
     ) -> (F, HashMap<Label, F>)
     where
         F: Fact,
-        Label: Eq + Hash + Clone,
         EntryTransfer: Fn(&BlockOC<Instruction, Terminator>) -> F,
         Transfer: Fn(&F, &BlockCC<Initiator, Instruction, Terminator>) -> Option<F>,
     {
@@ -187,7 +187,6 @@ where
     ) -> (F, HashMap<Label, F>)
     where
         F: Fact,
-        Label: Eq + Hash + Clone,
         EntryTransfer: Fn(&F, &BlockOC<Instruction, Terminator>) -> Option<F>,
         Transfer: Fn(&F, &BlockCC<Initiator, Instruction, Terminator>) -> Option<F>,
     {
