@@ -16,6 +16,38 @@ struct Terminator<Label, InitiatorT, InstructionT, TerminatorT> {
     replacement: Option<Box<GraphOC<Label, InitiatorT, InstructionT, TerminatorT>>>,
 }
 
+impl<Label, InitiatorT, InstructionT, TerminatorT>
+    Initiator<Label, InitiatorT, InstructionT, TerminatorT>
+{
+    fn new(original: InitiatorT) -> Self {
+        Initiator {
+            original,
+            replacement: None,
+        }
+    }
+}
+
+impl<Label, InitiatorT, InstructionT, TerminatorT>
+    Instruction<Label, InitiatorT, InstructionT, TerminatorT>
+{
+    fn new(original: InstructionT) -> Self {
+        Instruction {
+            original,
+            replacement: None,
+        }
+    }
+}
+impl<Label, InitiatorT, InstructionT, TerminatorT>
+    Terminator<Label, InitiatorT, InstructionT, TerminatorT>
+{
+    fn new(original: TerminatorT) -> Self {
+        Terminator {
+            original,
+            replacement: None,
+        }
+    }
+}
+
 type GraphOO<Label, InitiatorT, InstructionT, TerminatorT> = graph::GraphOO<
     Label,
     Initiator<Label, InitiatorT, InstructionT, TerminatorT>,
