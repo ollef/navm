@@ -51,7 +51,7 @@ pub struct GraphCC<Label, Initiator, Instruction, Terminator> {
 }
 
 impl<Label, Initiator, Instruction, Terminator> Labels<Label, Initiator, Instruction, Terminator> {
-    pub fn new() -> Labels<Label, Initiator, Instruction, Terminator> {
+    pub fn new() -> Self {
         Labels {
             map: HashMap::new(),
         }
@@ -59,7 +59,7 @@ impl<Label, Initiator, Instruction, Terminator> Labels<Label, Initiator, Instruc
 }
 
 impl<Label, Initiator, Instruction, Terminator> GraphOO<Label, Initiator, Instruction, Terminator> {
-    pub fn new() -> GraphOO<Label, Initiator, Instruction, Terminator> {
+    pub fn new() -> Self {
         GraphOO::Single(BlockOO::new())
     }
 }
@@ -67,7 +67,7 @@ impl<Label, Initiator, Instruction, Terminator> GraphOO<Label, Initiator, Instru
 impl<Label, Initiator, Instruction, Terminator> From<Instruction>
     for GraphOO<Label, Initiator, Instruction, Terminator>
 {
-    fn from(i: Instruction) -> GraphOO<Label, Initiator, Instruction, Terminator> {
+    fn from(i: Instruction) -> Self {
         GraphOO::Single(BlockOO::from(i))
     }
 }
@@ -75,7 +75,7 @@ impl<Label, Initiator, Instruction, Terminator> From<Instruction>
 impl<Label, Initiator, Instruction, Terminator> From<Terminator>
     for GraphOC<Label, Initiator, Instruction, Terminator>
 {
-    fn from(t: Terminator) -> GraphOC<Label, Initiator, Instruction, Terminator> {
+    fn from(t: Terminator) -> Self {
         GraphOC {
             entry: BlockOC::from(t),
             labels: Labels::new(),
@@ -86,9 +86,7 @@ impl<Label, Initiator, Instruction, Terminator> From<Terminator>
 impl<Label, Initiator, Instruction, Terminator> From<(Label, Initiator)>
     for GraphCO<Label, Initiator, Instruction, Terminator>
 {
-    fn from(
-        (label, initiator): (Label, Initiator),
-    ) -> GraphCO<Label, Initiator, Instruction, Terminator> {
+    fn from((label, initiator): (Label, Initiator)) -> Self {
         GraphCO {
             labels: Labels::new(),
             exit_label: label,

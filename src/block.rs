@@ -36,7 +36,7 @@ pub trait Terminate<Label> {
 }
 
 impl<Instruction> BlockOO<Instruction> {
-    pub fn new() -> BlockOO<Instruction> {
+    pub fn new() -> Self {
         BlockOO {
             instructions: Vec::new(),
         }
@@ -44,7 +44,7 @@ impl<Instruction> BlockOO<Instruction> {
 }
 
 impl<Instruction> From<Instruction> for BlockOO<Instruction> {
-    fn from(i: Instruction) -> BlockOO<Instruction> {
+    fn from(i: Instruction) -> Self {
         BlockOO {
             instructions: vec![i],
         }
@@ -52,7 +52,7 @@ impl<Instruction> From<Instruction> for BlockOO<Instruction> {
 }
 
 impl<Instruction, Terminator> From<Terminator> for BlockOC<Instruction, Terminator> {
-    fn from(t: Terminator) -> BlockOC<Instruction, Terminator> {
+    fn from(t: Terminator) -> Self {
         BlockOC {
             instructions: vec![],
             terminator: t,
@@ -61,7 +61,7 @@ impl<Instruction, Terminator> From<Terminator> for BlockOC<Instruction, Terminat
 }
 
 impl<Initiator, Instruction> From<Initiator> for BlockCO<Initiator, Instruction> {
-    fn from(i: Initiator) -> BlockCO<Initiator, Instruction> {
+    fn from(i: Initiator) -> Self {
         BlockCO {
             initiator: i,
             instructions: vec![],
